@@ -14,7 +14,7 @@ public class UsersDataSet implements Serializable { // Serializable Important to
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Integer id;
 
     @Column(name = "name", unique = true, updatable = false)
     private String name;
@@ -28,7 +28,7 @@ public class UsersDataSet implements Serializable { // Serializable Important to
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    public UsersDataSet(long id, String name, String password) {
+    public UsersDataSet(Integer id, String name, String password) {
         this.setId(id);
         this.setName(name);
         this.setPassword(password);
@@ -56,11 +56,11 @@ public class UsersDataSet implements Serializable { // Serializable Important to
         this.name = name;
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

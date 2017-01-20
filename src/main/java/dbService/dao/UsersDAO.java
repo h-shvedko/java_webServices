@@ -20,13 +20,10 @@ public class UsersDAO {
         return (UsersDataSet) session.get(UsersDataSet.class, id);
     }
 
-    public long getUserId(String name) throws HibernateException {
+    public Integer getUserId(String name) throws HibernateException {
         Criteria criteria = session.createCriteria(UsersDataSet.class);
         UsersDataSet userModel = (UsersDataSet) criteria.add(Restrictions.eq("name", name)).uniqueResult();
-        long id = 0;
-        if(userModel != null){
-            id = userModel.getId();
-        }
+        Integer id = userModel.getId();
         return id;
     }
 
@@ -34,7 +31,7 @@ public class UsersDAO {
         return (Long) session.save(new UsersDataSet(name));
     }
 
-    public long insertUser(String name, String password) throws HibernateException {
-        return (Long) session.save(new UsersDataSet(name, password));
+    public Integer insertUser(String name, String password) throws HibernateException {
+        return (Integer) session.save(new UsersDataSet(name, password));
     }
 }

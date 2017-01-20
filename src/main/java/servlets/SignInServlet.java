@@ -44,8 +44,8 @@ public class SignInServlet extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
 //        UserProfile profile = accountService.getUserByLogin(login);
         try {
-            long id = dbServise.getUserByName(login);
-            if(id != 0){
+            Integer id = dbServise.getUserByName(login);
+            if(id != null){
                 UsersDataSet userDataSet = dbServise.getUser(id);
                 if(userDataSet.getPassword().equals(pass)){
                     profile = true;

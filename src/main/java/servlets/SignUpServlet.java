@@ -46,9 +46,9 @@ public class SignUpServlet extends HttpServlet {
         }
 
         try {
-            long userId = this.dbServise.getUserByName(login);
+            Integer userId = this.dbServise.getUserByName(login);
 
-            if(userId != 0){
+            if(userId != null){
                 mes.concat("You are registered already!!!");
             } else {
                 this.dbServise.addUser(login, pass);
