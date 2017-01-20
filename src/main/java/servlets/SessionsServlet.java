@@ -54,7 +54,7 @@ public class SessionsServlet extends HttpServlet {
         }
 
         UserProfile profile = accountService.getUserByLogin(login);
-        if (profile == null || !profile.getPass().equals(pass)) {
+        if (profile == null || !profile.getPassword().equals(pass)) {
             response.setContentType("text/html;charset=utf-8");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;

@@ -1,15 +1,22 @@
 package accounts;
 
+import dbService.DBService;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class AccountService {
-    private final Map<String, UserProfile> loginToProfile;
-    private final Map<String, UserProfile> sessionIdToProfile;
+    private Map<String, UserProfile> loginToProfile = null;
+    private Map<String, UserProfile> sessionIdToProfile = null;
+    private DBService dbService = null;
 
     public AccountService() {
         loginToProfile = new HashMap<>();
         sessionIdToProfile = new HashMap<>();
+    }
+
+    public AccountService(DBService dbService) {
+        this.dbService = dbService;
     }
 
     public void addNewUser(UserProfile userProfile) {
@@ -30,5 +37,13 @@ public class AccountService {
 
     public void deleteSession(String sessionId) {
         sessionIdToProfile.remove(sessionId);
+    }
+
+    public DBService getDbService() {
+        return dbService;
+    }
+
+    public void setDbService(DBService dbService) {
+        this.dbService = dbService;
     }
 }

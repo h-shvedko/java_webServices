@@ -3,6 +3,8 @@ package servlets;
 import accounts.AccountService;
 import accounts.UserProfile;
 import com.google.gson.Gson;
+import dbService.DBExeption;
+import dbService.DBService;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -18,9 +20,11 @@ import java.util.Map;
  */
 public class SignUpServlet extends HttpServlet {
     private final AccountService accountService;
+    private final DBService dbServise;
 
     public SignUpServlet(AccountService accountService) {
         this.accountService = accountService;
+        this.dbServise = accountService.getDbService();
     }
 
     public void doGet(HttpServletRequest request,
@@ -33,6 +37,7 @@ public class SignUpServlet extends HttpServlet {
                        HttpServletResponse response) throws ServletException, IOException {
         String login = request.getParameter("login");
         String pass = request.getParameter("password");
+        String mes = "";
 
         if (login == null || pass == null) {
             response.setContentType("text/html;charset=utf-8");
@@ -40,14 +45,22 @@ public class SignUpServlet extends HttpServlet {
             return;
         }
 
-        UserProfile profile = accountService.getUserByLogin(login);
-        if(profile == null){
-            profile = new UserProfile(login, pass);
-            accountService.addSession(request.getSession().getId(), profile);
-            accountService.addNewUser(profile);
+        try {
+            long userId = this.dbServise.getUserByName(login);
+
+            if(userId != 0){
+                mes.concat("You are registered already!!!");
+            } else {
+                this.dbServise.addUser(login, pass);
+//                UserProfile profile = new UserProfile(login, pass);
+//                accountService.addSession(request.getSession().getId(), profile);
+//                accountService.addNewUser(profile);
+                mes.concat("You have been signuped))))");
+            }
+        } catch (DBExeption dbExeption) {
+            dbExeption.printStackTrace();
         }
 
-        String mes = "You have been signuped))))";
         Map<String, Object> pageVariables = createPageVariablesMap(mes);
 
         String message = request.getParameter("message");

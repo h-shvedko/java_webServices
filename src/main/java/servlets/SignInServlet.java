@@ -2,6 +2,10 @@ package servlets;
 
 import accounts.AccountService;
 import accounts.UserProfile;
+import dbService.DBExeption;
+import dbService.DBService;
+import dbService.dao.UsersDAO;
+import dbService.dataSets.UsersDataSet;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -16,9 +20,11 @@ import java.util.Map;
  */
 public class SignInServlet extends HttpServlet {
     private final AccountService accountService;
+    private final DBService dbServise;
 
     public SignInServlet(AccountService accountService) {
         this.accountService = accountService;
+        this.dbServise = this.accountService.getDbService();
     }
 
     public void doGet(HttpServletRequest request,
@@ -33,16 +39,28 @@ public class SignInServlet extends HttpServlet {
         String pass = request.getParameter("password");
         String mes = "";
         String message = request.getParameter("message");
+        boolean profile = false;
 
         response.setContentType("text/html;charset=utf-8");
-        UserProfile profile = accountService.getUserByLogin(login);
+//        UserProfile profile = accountService.getUserByLogin(login);
+        try {
+            long id = dbServise.getUserByName(login);
+            if(id != 0){
+                UsersDataSet userDataSet = dbServise.getUser(id);
+                if(userDataSet.getPassword().equals(pass)){
+                    profile = true;
+                }
+            }
+        } catch (DBExeption dbExeption) {
+            dbExeption.printStackTrace();
+        }
 
-        if (login == null || pass == null || profile == null) {
+        if (login == null || pass == null || profile == false) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             mes = "Unauthorized";
         }
 
-        if (profile != null && profile.getPass().equals(pass) && profile.getLogin().equals(login)) {
+        if (profile == true) {
             response.setStatus(HttpServletResponse.SC_OK);
             mes = "Authorized: " + login;
         }
